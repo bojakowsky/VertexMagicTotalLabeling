@@ -8,43 +8,54 @@ edge(e,a,f).
 len([],0).
 len([_|T],N)  :-  len(T,X),  N  is  X+1.
 
-atomToVariableMapper(Var,R,Map):-
-	atomToVariableMapper(Var,R,Map,Map).
-atomToVariableMapper(Var, R, Map, MapBuf) :-
-	nth0(Index, MapBuf, Var),
-	Index < 1, R = [NewVariable].
-atomToVariableMapper(b, R) :- R = [B].
-atomToVariableMapper(c, R) :- R = [C].
-atomToVariableMapper(d, R) :- R = [D].
-atomToVariableMapper(e, R) :- R = [E].
-atomToVariableMapper(f, R) :- R = [F].
-atomToVariableMapper(g, R) :- R = [G].
-atomToVariableMapper(h, R) :- R = [H].
-atomToVariableMapper(i, R) :- R = [I].
-atomToVariableMapper(j, R) :- R = [J].
-atomToVariableMapper(k, R) :- R = [K].
-atomToVariableMapper(l, R) :- R = [L].
-atomToVariableMapper(m, R) :- R = [M].
-atomToVariableMapper(n, R) :- R = [N].
-atomToVariableMapper(o, R) :- R = [O].
-atomToVariableMapper(p, R) :- R = [P].
-atomToVariableMapper(q, R) :- R = [Q].
-atomToVariableMapper(r, R) :- R = [R].
-atomToVariableMapper(s, R) :- R = [S].
-atomToVariableMapper(t, R) :- R = [T].
-atomToVariableMapper(u, R) :- R = [U].
-atomToVariableMapper(v, R) :- R = [V].
-atomToVariableMapper(w, R) :- R = [W].
-atomToVariableMapper(x, R) :- R = [X].
-atomToVariableMapper(y, R) :- R = [Y].
-atomToVariableMapper(z, R) :- R = [Z].
+atomToVariableMapper(Var, R, Map1, Map2) :-
+	nonvar(Map1)->
+	assignNewVariableIfNotMember(Var, R, Map1, Map2);
+	assignNewVariableIfNotMember(Var, R, [], []).
+
+
+assignNewVariableIfNotMember(Var, R, Map1, Map2):-
+	member(Var,Map1)->
+	getAtomMapVariable(Var, Map1, Map2, R);
+	R = [NewVariable].
+
+getAtomMapVariable(Var, Map1, Map2, R):-
+	nth0(Index, Map1, Var),
+	getVariable(Index, Map2, R).
+
+getVariable(Index, Map, Result):-
+	N = 0,
+	getVariable(Index, Map, Result, N).
+
+getVariable(Index, [H|T], Result, N):-
+	Index = N ->
+	Result = [H];
+	N1 is N+1,
+	getVariable(Index, T, Result, N1).
+
+
 
 addToList(L,NL):-
 	append(L, [], NL).
+
 addToList(L1, L2, NL):-
 	append(L1, L2, NL).
 
-mapAtomList([],Vs,Map,Vs,Map).
+isAddingElementUnique([H|_], L2):-
+	member(H, L2)->
+	false;
+	true.
+
+addToListIfInstantiated(L1, L2, NL):-
+	nonvar(L1)->
+	(   nonvar(L2)->
+	    addToList(L2, L1, NL);
+	    addToList(L1, NL)
+	);
+	addToList(L2,NL).
+
+mapAtomList([], Vs, Vs, Map1, Map1, Map2, Map2).
+mapAtomList([], Vs, Vs, Map1, Map2, Map3, Map4).
 
 %	Vs ins 1..10,
 %	all_different(Vs),
@@ -54,15 +65,32 @@ mapAtomList([],Vs,Map,Vs,Map).
 %	write(Vs),
 %	!.
 
-mapAtomList(Al,Vs,Map):- mapAtomList(Al,TempVs,TempMap,Vs,Map).
+mapAtomList(Al,Vs,Map1,Map2):-
+	N = 0,
+	mapAtomList(Al,TempVs,Vs, TempMap1, Map1, TempMap2, Map2, N).
 
-mapAtomList([AtomsH|AtomsT],TempVs,TempMap,Vs,Map):-
-	atomToVariableMapper(AtomsH,R,Map),
-	addToList([AtomsH],R, AR),
-	addToList(TempMap,AR,MapTAR),
+mapAtomList(List, TempVs, Vs, TempMap1, Map1, TempMap2, Map2, N):-
+	(   N = 0 ->
+	addToListIfInstantiated(Map1, TempMap1, TM1),
+	addToListIfInstantiated(Map2, TempMap2, TM2),
+	mapAtomList(List, TempVs, Vs, TM1, Map1, TM2, Map2);
+	true ).
+
+
+mapAtomList([AtomsH|AtomsT], TempVs, Vs, TempMap1, Map1, TempMap2, Map2):-
+
+	atomToVariableMapper(AtomsH, R, Map1, Map2),
+	(isAddingElementUnique([AtomsH], TempMap1)->
+	addToList([AtomsH], TempMap1, TMP1),
+	addToList(R, TempMap2, TMP2);
+	addToList(TempMap2, TMP2)),
+
+	%list_to_set(BufTMP1, TMP1),
+
+
 	addToList(R,NL),
 	addToList(TempVs,NL,VSNL),
-	mapAtomList(AtomsT,VSNL,MapTAR,Vs,Map).
+	mapAtomList(AtomsT, VSNL, Vs, TMP1, Map1, TMP2, Map2).
 
 findAdjacentEdgesForVertexIncludingVertex(V, R):-
 	findall(X, (edge(V,Y,X) ; edge(Y,V,X)), Z),
@@ -76,7 +104,9 @@ findEdges(F,Z):-
 	write("\n Length: "),
 	write(N),
 	write("\n"),
-	mapAtomList(Z, Vs,Map),
+	mapAtomList(Z, Vs, Map1, Map2),
+	write(Map1),
+	write(Map2),
 	write(Vs),
 	!.
 
@@ -91,11 +121,11 @@ findEdgesTest(Z):-
        write(E),
        write(H),
        write(J),
-       mapAtomList(A,Vs1,Map),
-       mapAtomList(C,Vs2,Map),
-       mapAtomList(E,Vs3,Map),
-       mapAtomList(H,Vs4,Map),
-       mapAtomList(J,Vs5,Map),
+       mapAtomList(A, Vs1, Map1, Map2),
+       mapAtomList(C, Vs2, Map1, Map2),
+       mapAtomList(E, Vs3, Map1, Map2),
+       mapAtomList(H, Vs4, Map1, Map2),
+       mapAtomList(J, Vs5, Map1, Map2),
 
        append(Vs1,Vs2, T1),
        append(Vs3, Vs4, T2),
@@ -112,13 +142,3 @@ findEdgesTest(Z):-
        label(Test),
        write(Test),
        !.
-
-dlugosc(Lst,Dlugosc) :- dlugosc(Lst,0,Dlugosc).
-dlugosc([],A,A).
-dlugosc([_|T],A,Dlugosc) :-
-   A1 is A + 1,
-   dlugosc(T,A1,Dlugosc).
-
-test(Lst):-
-	dlugosc(Lst,Dlugosc),
-	write(Dlugosc).
