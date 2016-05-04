@@ -110,6 +110,43 @@ findEdgesTest(F,Z):-
 	writeln(Vs),
 	!.
 
+solveVMTL(L, Result):-
+	N is 0,
+	composeAllAdjacentsForAllVertexes(L, OBuf, O),
+	writeln(O),
+	composeAllMapAtomListForEveryListOfLists(O, VsOut, Map1Out, Map2Out),
+	writeln(VsOut),
+	writeln(Map1Out),
+	writeln(Map2Out),
+	clpfd_equationSolver(Map2Out, VsOut).
+
+
+
+composeAllMapAtomListForEveryListOfLists(LoL, VsLoLOut, Map1Out, Map2Out):-
+	composeAllMapAtomListForEveryListOfLists(LoL, VsLoLOut, Map1Out, Map2Out, VsBuf, Map1Buf, Map2Buf).
+
+composeAllMapAtomListForEveryListOfLists([H|T], VsLoLOut, Map1Out, Map2Out, VsBuf, Map1Buf, Map2Buf):-
+	mapAtomList(H, Vs, Map1Buf, Map2Buf, Map1OutBuf, Map2OutBuf),
+	(
+	    nonvar(VsBuf)->addToList([Vs], VsBuf, VsBufOut);
+	    addToList([Vs], VsBufOut)
+	),
+	composeAllMapAtomListForEveryListOfLists(T, VsLoLOut, Map1Out, Map2Out, VsBufOut, Map1OutBuf, Map2OutBuf).
+
+composeAllMapAtomListForEveryListOfLists([], VsLoLOut, Map1Out, Map2Out, VsLoLOut, Map1Out, Map2Out).
+
+
+
+composeAllAdjacentsForAllVertexes([H|T], OBuf, O):-
+	findAdjacentEdgesForVertexIncludingVertex(H, R),
+	(
+	    nonvar(OBuf)-> addToList([R], OBuf, R1);
+	    R1 = [R]
+	),
+	composeAllAdjacentsForAllVertexes(T, R1, O).
+
+composeAllAdjacentsForAllVertexes([],O, O).
+
 
 findEdges_TestThatFails(Z):-
        findAdjacentEdgesForVertexIncludingVertex(a,A),
@@ -165,8 +202,7 @@ findEdges_TestThatPass(Z):-
        writeln(C),
        writeln(Vs3),
        writeln(Map6out),
-       writeln(Map5out),
-       len(Map6out,N),
+       writeln(Map5out),       len(Map6out,N),
        Map6out ins 1..N,
        all_different(Map6out),
        sum(Vs1, #=, S),
@@ -177,3 +213,28 @@ findEdges_TestThatPass(Z):-
        writeln(S),
        !.
 
+sumTest(Z):-
+	Vs1=[A,B,D],
+	Vs2=[E,D],
+	Vs3=[C,B],
+	VsOut=[Vs1,Vs2,Vs3],
+	Vs = [A,B,C,D,E],
+	clpfd_equationSolver(Vs, VsOut).
+
+clpfd_equationSolver(L, LoL):-
+	len(L, N),
+	L ins 1..N,
+	all_different(L),
+	sumAll(LoL, S),
+	label(L),
+	writeln(L), !,
+	writeln(S).
+
+sumSingle(L, S):-
+	sum(L, #=, S).
+
+sumAll([H|T], S):-
+	sumSingle(H,S),
+	sumAll(T, S).
+
+sumAll([], S).
