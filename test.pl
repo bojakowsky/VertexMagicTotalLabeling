@@ -1,9 +1,4 @@
 :- use_module(library(clpfd)).
-edge(j,a,i).
-edge(h,a,g).
-edge(a,c,b).
-edge(c,e,d).
-edge(e,a,f).
 
 len([],0).
 len([_|T],N)  :-  len(T,X),  N  is  X+1.
@@ -55,34 +50,35 @@ addToListIfInstantiated(L1, L2, NL):-
 	addToList(L2,NL).
 
 mapAtomList([], Vs, Vs, Map1, Map1, Map2, Map2).
-mapAtomList([], Vs, Vs, Map1, Map2, Map3, Map4).
+mapAtomList([], Vs, Vs, Map1Out, Map1In, Map2Out, Map2In, Map1Out, Map2Out).
 
 %	Vs ins 1..10,
 %	all_different(Vs),
 %	sum(Vs, #=, S),
 %	sum(Vs, #=, S),
 %	label(Vs).
-%	write(Vs),
+%	writeln(Vs),
 %	!.
 
-mapAtomList(Al,Vs,Map1,Map2):-
+mapAtomList(Al,Vs,Map1,Map2,Map1out, Map2out):-
 	N = 0,
-	mapAtomList(Al,TempVs,Vs, TempMap1, Map1, TempMap2, Map2, N).
+	mapAtomList(Al,TempVs,Vs, TempMap1, Map1, TempMap2, Map2, N, Map1out, Map2out).
 
-mapAtomList(List, TempVs, Vs, TempMap1, Map1, TempMap2, Map2, N):-
+mapAtomList(List, TempVs, Vs, TempMap1, Map1, TempMap2, Map2, N, Map1out, Map2out):-
 	(   N = 0 ->
 	addToListIfInstantiated(Map1, TempMap1, TM1),
 	addToListIfInstantiated(Map2, TempMap2, TM2),
-	mapAtomList(List, TempVs, Vs, TM1, Map1, TM2, Map2);
+	mapAtomList(List, TempVs, Vs, TM1, Map1, TM2, Map2, Map1out, Map2out);
 	true ).
 
 
-mapAtomList([AtomsH|AtomsT], TempVs, Vs, TempMap1, Map1, TempMap2, Map2):-
+mapAtomList([AtomsH|AtomsT], TempVs, Vs, TempMap1, Map1, TempMap2, Map2, Map1out, Map2out):-
 
 	atomToVariableMapper(AtomsH, R, Map1, Map2),
 	(isAddingElementUnique([AtomsH], TempMap1)->
 	addToList([AtomsH], TempMap1, TMP1),
 	addToList(R, TempMap2, TMP2);
+	addToList(TempMap1, TMP1),
 	addToList(TempMap2, TMP2)),
 
 	%list_to_set(BufTMP1, TMP1),
@@ -90,55 +86,94 @@ mapAtomList([AtomsH|AtomsT], TempVs, Vs, TempMap1, Map1, TempMap2, Map2):-
 
 	addToList(R,NL),
 	addToList(TempVs,NL,VSNL),
-	mapAtomList(AtomsT, VSNL, Vs, TMP1, Map1, TMP2, Map2).
+	mapAtomList(AtomsT, VSNL, Vs, TMP1, Map1, TMP2, Map2, Map1out, Map2out).
 
 findAdjacentEdgesForVertexIncludingVertex(V, R):-
 	findall(X, (edge(V,Y,X) ; edge(Y,V,X)), Z),
 	append([V], Z, R).
 
+edge(j,a,i).
+edge(h,a,g).
+edge(a,c,b).
+edge(c,e,d).
+edge(e,a,f).
 
-findEdges(F,Z):-
+findEdgesTest(F,Z):-
 	findAdjacentEdgesForVertexIncludingVertex(F,Z),
-	write(Z),
+	writeln(Z),
 	len(Z,N),
-	write("\n Length: "),
-	write(N),
-	write("\n"),
-	mapAtomList(Z, Vs, Map1, Map2),
-	write(Map1),
-	write(Map2),
-	write(Vs),
+	writeln("Length: "),
+	writeln(N),
+	mapAtomList(Z, Vs, Map1, Map2, Map1out, Map2out),
+	writeln(Map1out),
+	writeln(Map2out),
+	writeln(Vs),
 	!.
 
-findEdgesTest(Z):-
+
+findEdges_TestThatFails(Z):-
        findAdjacentEdgesForVertexIncludingVertex(a,A),
        findAdjacentEdgesForVertexIncludingVertex(c,C),
        findAdjacentEdgesForVertexIncludingVertex(e,E),
        findAdjacentEdgesForVertexIncludingVertex(h,H),
        findAdjacentEdgesForVertexIncludingVertex(j,J),
-       write(A),
-       write(C),
-       write(E),
-       write(H),
-       write(J),
-       mapAtomList(A, Vs1, Map1, Map2),
-       mapAtomList(C, Vs2, Map1, Map2),
-       mapAtomList(E, Vs3, Map1, Map2),
-       mapAtomList(H, Vs4, Map1, Map2),
-       mapAtomList(J, Vs5, Map1, Map2),
-
-       append(Vs1,Vs2, T1),
-       append(Vs3, Vs4, T2),
-       append(T1, T2, T3),
-       append(Vs5, T3, Test),
-       len(Test,N),
-       Test ins 1..N,
-       all_different(Test),
+       mapAtomList(A, Vs1, Map1in, Map2in, Map1out, Map2out),
+       writeln(A),
+       writeln(Vs1),
+       mapAtomList(C, Vs2, Map1out, Map2out, Map3out, Map4out),
+       writeln(C),
+       writeln(Vs2),
+       mapAtomList(E, Vs3, Map3out, Map4out, Map5out, Map6out),
+       writeln(E),
+       writeln(Vs3),
+       mapAtomList(H, Vs4, Map5out, Map6out, Map7out, Map8out),
+       writeln(H),
+       writeln(Vs4),
+       mapAtomList(J, Vs5, Map7out, Map8out, Map9out, Map10out), !,
+       writeln(J),
+       writeln(Vs5),
+       writeln(Map10out),
+       writeln(Map9out),
+       len(Map10out,N),
+       Map10out ins 1..N,
+       all_different(Map10out),
        sum(Vs1, #=, S),
        sum(Vs2, #=, S),
        sum(Vs3, #=, S),
        sum(Vs4, #=, S),
        sum(Vs5, #=, S),
-       label(Test),
-       write(Test),
+       label(Map10out),
+       writeln(Map10out),
        !.
+
+
+edge(z,y,x).
+edge(y,w,q).
+edge(w,z,r).
+
+findEdges_TestThatPass(Z):-
+       findAdjacentEdgesForVertexIncludingVertex(z,A),
+       findAdjacentEdgesForVertexIncludingVertex(y,E),
+       findAdjacentEdgesForVertexIncludingVertex(w,C),
+       mapAtomList(A, Vs1, Map1in, Map2in, Map1out, Map2out),
+       writeln(A),
+       writeln(Vs1),
+       mapAtomList(E, Vs2, Map1out, Map2out, Map3out, Map4out),
+       writeln(E),
+       writeln(Vs2),
+       mapAtomList(C, Vs3, Map3out, Map4out, Map5out, Map6out),
+       writeln(C),
+       writeln(Vs3),
+       writeln(Map6out),
+       writeln(Map5out),
+       len(Map6out,N),
+       Map6out ins 1..N,
+       all_different(Map6out),
+       sum(Vs1, #=, S),
+       sum(Vs2, #=, S),
+       sum(Vs3, #=, S),
+       label(Map6out),
+       writeln(Map6out),
+       writeln(S),
+       !.
+
