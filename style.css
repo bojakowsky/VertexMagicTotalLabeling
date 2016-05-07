@@ -1,0 +1,25 @@
+body { 
+  font: 14px helvetica neue, helvetica, arial, sans-serif;
+}
+
+#cy {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #FAEDEF;
+}
+
+#buttonPanel {
+    text-align: center; 
+    display:inline-block; 
+    position: absolute; 
+    z-index: 99999;
+    padding: 10px;
+}
+
+.buttonMargin {
+    margin: 2px !important;
+    min-width: 150 !important;
+}

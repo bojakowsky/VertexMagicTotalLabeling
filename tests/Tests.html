@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script src="js/jquery-2.0.3.min.js"></script>
+<h2>Tests</h2>
+
+<button type="button" onclick="webSocketTest()">Request data</button>
+
+<p id="demo"></p>
+
+
+<script>
+<!-- var xhr; -->
+
+var sendInfo = {
+           Name: 'name',
+           Address: 'address',
+           Phone: 'phone'
+       };
+	   
+	   
+var socket;	   
+function webSocketTest() {
+		socket = new WebSocket('ws://localhost:3002/');
+		socket.onopen= function() {
+			socket.send("dsadsadasadssds");
+		};
+		
+		// Log errors
+		socket.onerror = function (error) {
+		  alert('WebSocket Error ' + error);
+		};
+
+		// Log messages from the server
+		socket.onmessage = function (e) {
+		  alert('Server: ' + e.data);
+		};
+}; 
+
+function httpTest1(){
+		$.ajax({
+            type: 'post',
+            url: 'http://localhost:3002/',
+            data: '{"hello":"world"}',
+            contentType: "application/json",
+            traditional: true,
+            success: function (data) {
+                alert("Loled");
+            }
+        });
+	}
+
+function httpTest2(){	   
+	xhr = new XMLHttpRequest();
+	xhr.open('POST', 'http://localhost:81/', true);
+	xhr.setRequestHeader('Content-Type', 'application/json');
+
+	xhr.send(JSON.stringify('{"hello":"world"}'));
+	
+	xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+        var myArr = JSON.parse(xhr.responseText);
+        myFunction(myArr);
+		}
+	}
+
+
+}
+
+
+
+
+
+</script>
+
+</body>
+</html>

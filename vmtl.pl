@@ -1,4 +1,6 @@
 :- use_module(library(clpfd)).
+:- Dynamic edge/3.
+:- initialization(startVMTLSolvingProcess).
 
 len([],0).
 len([_|T],N)  :-  len(T,X),  N  is  X+1.
@@ -7,7 +9,6 @@ atomToVariableMapper(Var, R, Map1, Map2) :-
 	nonvar(Map1)->
 	assignNewVariableIfNotMember(Var, R, Map1, Map2);
 	assignNewVariableIfNotMember(Var, R, [], []).
-
 
 assignNewVariableIfNotMember(Var, R, Map1, Map2):-
 	member(Var,Map1)->
@@ -27,7 +28,6 @@ getVariable(Index, [H|T], Result, N):-
 	Result = [H];
 	N1 is N+1,
 	getVariable(Index, T, Result, N1).
-
 
 
 addToList(L,NL):-
@@ -51,14 +51,6 @@ addToListIfInstantiated(L1, L2, NL):-
 
 mapAtomList([], Vs, Vs, Map1, Map1, Map2, Map2).
 mapAtomList([], Vs, Vs, Map1Out, Map1In, Map2Out, Map2In, Map1Out, Map2Out).
-
-%	Vs ins 1..10,
-%	all_different(Vs),
-%	sum(Vs, #=, S),
-%	sum(Vs, #=, S),
-%	label(Vs).
-%	writeln(Vs),
-%	!.
 
 mapAtomList(Al,Vs,Map1,Map2,Map1out, Map2out):-
 	N = 0,
@@ -88,27 +80,10 @@ mapAtomList([AtomsH|AtomsT], TempVs, Vs, TempMap1, Map1, TempMap2, Map2, Map1out
 	addToList(TempVs,NL,VSNL),
 	mapAtomList(AtomsT, VSNL, Vs, TMP1, Map1, TMP2, Map2, Map1out, Map2out).
 
-findAdjacentEdgesForVertexIncludingVertex(V, R):-
+	findAdjacentEdgesForVertexIncludingVertex(V, R):-
 	findall(X, (edge(V,Y,X) ; edge(Y,V,X)), Z),
 	append([V], Z, R).
 
-edge(j,a,i).
-edge(h,a,g).
-edge(a,c,b).
-edge(c,e,d).
-edge(e,a,f).
-
-findEdgesTest(F,Z):-
-	findAdjacentEdgesForVertexIncludingVertex(F,Z),
-	writeln(Z),
-	len(Z,N),
-	writeln("Length: "),
-	writeln(N),
-	mapAtomList(Z, Vs, Map1, Map2, Map1out, Map2out),
-	writeln(Map1out),
-	writeln(Map2out),
-	writeln(Vs),
-	!.
 
 solveVMTL(L, Result):-
 	N is 0,
@@ -119,8 +94,6 @@ solveVMTL(L, Result):-
 	writeln(Map1Out),
 	writeln(Map2Out),
 	clpfd_equationSolver(Map2Out, VsOut).
-
-
 
 composeAllMapAtomListForEveryListOfLists(LoL, VsLoLOut, Map1Out, Map2Out):-
 	composeAllMapAtomListForEveryListOfLists(LoL, VsLoLOut, Map1Out, Map2Out, VsBuf, Map1Buf, Map2Buf).
@@ -135,8 +108,6 @@ composeAllMapAtomListForEveryListOfLists([H|T], VsLoLOut, Map1Out, Map2Out, VsBu
 
 composeAllMapAtomListForEveryListOfLists([], VsLoLOut, Map1Out, Map2Out, VsLoLOut, Map1Out, Map2Out).
 
-
-
 composeAllAdjacentsForAllVertexes([H|T], OBuf, O):-
 	findAdjacentEdgesForVertexIncludingVertex(H, R),
 	(
@@ -147,87 +118,14 @@ composeAllAdjacentsForAllVertexes([H|T], OBuf, O):-
 
 composeAllAdjacentsForAllVertexes([],O, O).
 
-
-findEdges_TestThatFails(Z):-
-       findAdjacentEdgesForVertexIncludingVertex(a,A),
-       findAdjacentEdgesForVertexIncludingVertex(c,C),
-       findAdjacentEdgesForVertexIncludingVertex(e,E),
-       findAdjacentEdgesForVertexIncludingVertex(h,H),
-       findAdjacentEdgesForVertexIncludingVertex(j,J),
-       mapAtomList(A, Vs1, Map1in, Map2in, Map1out, Map2out),
-       writeln(A),
-       writeln(Vs1),
-       mapAtomList(C, Vs2, Map1out, Map2out, Map3out, Map4out),
-       writeln(C),
-       writeln(Vs2),
-       mapAtomList(E, Vs3, Map3out, Map4out, Map5out, Map6out),
-       writeln(E),
-       writeln(Vs3),
-       mapAtomList(H, Vs4, Map5out, Map6out, Map7out, Map8out),
-       writeln(H),
-       writeln(Vs4),
-       mapAtomList(J, Vs5, Map7out, Map8out, Map9out, Map10out), !,
-       writeln(J),
-       writeln(Vs5),
-       writeln(Map10out),
-       writeln(Map9out),
-       len(Map10out,N),
-       Map10out ins 1..N,
-       all_different(Map10out),
-       sum(Vs1, #=, S),
-       sum(Vs2, #=, S),
-       sum(Vs3, #=, S),
-       sum(Vs4, #=, S),
-       sum(Vs5, #=, S),
-       label(Map10out),
-       writeln(Map10out),
-       !.
-
-
-edge(z,y,x).
-edge(y,w,q).
-edge(w,z,r).
-
-findEdges_TestThatPass(Z):-
-       findAdjacentEdgesForVertexIncludingVertex(z,A),
-       findAdjacentEdgesForVertexIncludingVertex(y,E),
-       findAdjacentEdgesForVertexIncludingVertex(w,C),
-       mapAtomList(A, Vs1, Map1in, Map2in, Map1out, Map2out),
-       writeln(A),
-       writeln(Vs1),
-       mapAtomList(E, Vs2, Map1out, Map2out, Map3out, Map4out),
-       writeln(E),
-       writeln(Vs2),
-       mapAtomList(C, Vs3, Map3out, Map4out, Map5out, Map6out),
-       writeln(C),
-       writeln(Vs3),
-       writeln(Map6out),
-       writeln(Map5out),       len(Map6out,N),
-       Map6out ins 1..N,
-       all_different(Map6out),
-       sum(Vs1, #=, S),
-       sum(Vs2, #=, S),
-       sum(Vs3, #=, S),
-       label(Map6out),
-       writeln(Map6out),
-       writeln(S),
-       !.
-
-sumTest(Z):-
-	Vs1=[A,B,D],
-	Vs2=[E,D],
-	Vs3=[C,B],
-	VsOut=[Vs1,Vs2,Vs3],
-	Vs = [A,B,C,D,E],
-	clpfd_equationSolver(Vs, VsOut).
-
 clpfd_equationSolver(L, LoL):-
 	len(L, N),
 	L ins 1..N,
 	all_different(L),
 	sumAll(LoL, S),
 	label(L),
-	writeln(L), !.
+	writeln(L), !,
+	writeln(S).
 
 sumSingle(L, S):-
 	sum(L, #=, S).
@@ -237,3 +135,28 @@ sumAll([H|T], S):-
 	sumAll(T, S).
 
 sumAll([], S).
+
+startVMTLSolvingProcess:-
+	open('asserts.txt', read, Str),
+    read_file(Str,Lines),
+    close(Str),
+	buildAssertsFromFile(Lines, L),
+	solveVMTL(L, Result),
+	write('tempResult').
+	
+buildAssertsFromFile([H|T], L):-
+	assert(H),
+	buildAssertsFromFile(T, L).
+
+buildAssertsFromFile([H|_], L):-
+	buildAssertsFromFile([], H).
+	
+buildAssertsFromFile([]).	
+
+readFile(Stream,[]) :-
+    at_end_of_stream(Stream).
+
+readFile(Stream,[X|L]) :-
+    \+ at_end_of_stream(Stream),
+    read(Stream,X),
+    readFile(Stream,L).
