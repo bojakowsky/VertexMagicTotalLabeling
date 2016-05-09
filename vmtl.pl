@@ -88,12 +88,13 @@ mapAtomList([AtomsH|AtomsT], TempVs, Vs, TempMap1, Map1, TempMap2, Map2, Map1out
 solveVMTL(L, Result):-
 	N is 0,
 	composeAllAdjacentsForAllVertexes(L, OBuf, O),
-	writeln(O),
+	%writeln(O),
 	composeAllMapAtomListForEveryListOfLists(O, VsOut, Map1Out, Map2Out),
-	writeln(VsOut),
-	writeln(Map1Out),
-	writeln(Map2Out),
-	clpfd_equationSolver(Map2Out, VsOut).
+	%writeln(VsOut),
+	%writeln(Map1Out),
+	%writeln(Map2Out),
+	!,
+	clpfd_equationSolver(Map2Out, VsOut, Map1Out), !.
 
 composeAllMapAtomListForEveryListOfLists(LoL, VsLoLOut, Map1Out, Map2Out):-
 	composeAllMapAtomListForEveryListOfLists(LoL, VsLoLOut, Map1Out, Map2Out, VsBuf, Map1Buf, Map2Buf).
@@ -118,12 +119,13 @@ composeAllAdjacentsForAllVertexes([H|T], OBuf, O):-
 
 composeAllAdjacentsForAllVertexes([],O, O).
 
-clpfd_equationSolver(L, LoL):-
+clpfd_equationSolver(L, LoL, WL):-
 	len(L, N),
 	L ins 1..N,
 	all_different(L),
 	sumAll(LoL, S),
 	label(L),
+	writeln(WL), !,
 	writeln(L), !,
 	writeln(S).
 
@@ -138,20 +140,17 @@ sumAll([], S).
 
 startVMTLSolvingProcess:-
 	open('asserts.txt', read, Str),
-    read_file(Str,Lines),
-    close(Str),
-	buildAssertsFromFile(Lines, L),
+	readFile(Str,Lines),
+	close(Str),!, 
+	buildAssertsFromFile(Lines, L),!,
 	solveVMTL(L, Result),
-	write('tempResult').
-	
+	retractall(edge(_,_,_)).
+
 buildAssertsFromFile([H|T], L):-
 	assert(H),
 	buildAssertsFromFile(T, L).
 
-buildAssertsFromFile([H|_], L):-
-	buildAssertsFromFile([], H).
-	
-buildAssertsFromFile([]).	
+buildAssertsFromFile([H,_], H).
 
 readFile(Stream,[]) :-
     at_end_of_stream(Stream).

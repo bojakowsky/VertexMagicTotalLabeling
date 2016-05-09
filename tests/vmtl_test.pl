@@ -117,7 +117,7 @@ solveVMTL(L, Result):-
 	composeAllMapAtomListForEveryListOfLists(O, VsOut, Map1Out, Map2Out),
 	writeln(VsOut),
 	writeln(Map1Out),
-	writeln(Map2Out),
+	writeln(Map2Out), !, 
 	clpfd_equationSolver(Map2Out, VsOut).
 
 
@@ -238,3 +238,7 @@ sumAll([H|T], S):-
 	sumAll(T, S).
 
 sumAll([], S).
+
+edge(aa,bb,cc).
+solveVMTL_Fail(Result):-
+	solveVMTL([aa,bb], Result).

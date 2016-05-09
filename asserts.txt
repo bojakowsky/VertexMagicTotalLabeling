@@ -1,0 +1,14 @@
+edge(h, e, m). 
+edge(a, g, n). 
+edge(g, h, o). 
+edge(a, ag, ah). 
+edge(ag, w, ai). 
+edge(w, x, aj). 
+edge(x, y, ak). 
+edge(y, z, al). 
+edge(z, aa, am). 
+edge(aa, ab, an). 
+edge(ab, ac, ao). 
+edge(ac, ad, ap). 
+edge(ad, ae, aq). 
+[a, e, g, h, w, x, y, z, aa, ab, ac, ad, ae, ag].

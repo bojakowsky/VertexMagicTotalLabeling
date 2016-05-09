@@ -1,2 +1,2 @@
-'a(a,c)'.
-'houses2'.
+'a(a,c)'.[
+houses2, wyg].

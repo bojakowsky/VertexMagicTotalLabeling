@@ -32,7 +32,7 @@ function centerGraph(){
     cy.reset();
 }
 
-function removeNode()
+function removeNodess()
 {
     if (selectedNodeIds && selectedNodeIds.length > 0){
         cy.remove("#"+ selectedNodeIds[0]);
@@ -49,32 +49,66 @@ function unselectNode(){
 }
 
 function getEdgesAndNodesAsFacts(){
-    var asserts = "";
+    var asserts = "echo ";
     
     for (var i = 0 ; i < cy.edges().length; i++){
-        asserts += 'echo \'edge(' + cy.edges()[i].source().id() + ', ' + cy.edges()[i].target().id() + ', ' + cy.edges()[i].id() + ')\'. \n';
+        asserts += 'edge^(' + cy.edges()[i].source().id() + ', ' + cy.edges()[i].target().id() + ', ' + cy.edges()[i].id() + '^). & echo.';
     }
     
-    var vertices = "echo '[";
+    var vertices = "[";
     for (var i = 0 ; i < cy.nodes().length; i++){
         vertices += cy.nodes()[i].id() + ', ';
     }
-    vertices = vertices.substr(0,vertices.length-2) +"]'";
+    vertices = vertices.substr(0,vertices.length-2) +"].";
     
     return asserts + vertices;
 }
 
 function solve(){
-    data = getEdgesAndNodesAsFacts();
-    path = document.getElementById("swiplPath").value;
-    if (path){
-        
-        var textToWrite = '"' + path + '\\swipl.exe" -f \"vmtl.pl\" < \"vmtl.pl\" > result.txt  2> error.txt" \n (' + data + ')> text.txt'; // without parameters
+	$("#process").text("Please wait, it can take a while... To break solving click the button again.");
+	
+    dataToSend = getEdgesAndNodesAsFacts();
+    //path = document.getElementById("swiplPath").value;
+    //if (path){
+        var dataToSendAsJSON = JSON.parse('{"data": "(' + dataToSend + ') > asserts.txt" }');
+        //var textToWrite = '(' + dataToSend + ')> asserts.txt \n"' + path + '\\swipl" -f \"vmtl.pl\" < \"vmtl.pl\" > result.txt  2> error.txt"'; // without parameters
         //var textToWrite = '"' + path + '" -f \"vmtl.pl\" -- b < \"vmtl.pl\" > result.txt  2> error.txt"'; // with parameter
-        var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
-        var fileNameToSaveAs = "vmtl.bat";
+        //var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
+        //var fileNameToSaveAs = "vmtl.bat";
+		var socket = io.connect('http://localhost:81'); // connec to server
+	    socket.on('news', function (data) { // listen to news event raised by the server
+		  console.log(dataToSendAsJSON);
+		  socket.emit('execute', dataToSendAsJSON ); // raise an event on the server
+	    });
+		
+		socket.on('reply', function(data){
+			var data = data.data;
+			if (data != 'False.'){
+				var splitData = data.split(" ").filter(function(el) {return el.length != 0});
+				
+				splitData[0] = splitData[0].replace("[", "");
+				splitData[0] = splitData[0].replace("]", "");
+				
+				splitData[1] = splitData[1].replace("[", "");
+				splitData[1] = splitData[1].replace("]", "");
+				
+				splitData[2] = splitData[2].replace("[", "");
+				splitData[2] = splitData[2].replace("]", "");
+				
+				splitIds = splitData[0].split(",");
+				splitVal = splitData[1].split(",");
+				
+				for (var i = 0 ; i < splitIds.length; ++i){
+					cy.$("#" + splitIds[i]).attr("text", splitIds[i] + " = " + splitVal[i]);
+				}
+				$("#process").text("True, it's vertex-magic total graph. Sum for each vertex is: " + splitData[2]);
+			}
+			else {
+				$("#process").text("False, it's not vertex-magic total graph");
+			}
 
-        var downloadLink = document.createElement("a");
+		});
+        /*var downloadLink = document.createElement("a");
         downloadLink.download = fileNameToSaveAs;
         downloadLink.innerHTML = "Hidden Link";
         window.URL = window.URL || window.webkitURL;
@@ -82,9 +116,9 @@ function solve(){
         downloadLink.onclick = destroyClickedElement;
         downloadLink.style.display = "none";
         document.body.appendChild(downloadLink);
-        downloadLink.click();
-    }
-    else $('#errorModal').modal('show');
+        downloadLink.click();*/
+    //}
+    //else $('#errorModal').modal('show');
 }
 
 function destroyClickedElement(event)
@@ -96,8 +130,9 @@ $(function(){ // on dom ready
     
     
     function createNode(){
+		var newId =getCurrentLetter();
         cy.add({
-                group: "nodes", data: { id: getCurrentLetter() }, 
+                group: "nodes", data: { id: newId, text: newId  }, 
                 renderedPosition: { x: window.event.pageX, y: window.event.pageY } 
         });
     }
@@ -105,7 +140,7 @@ $(function(){ // on dom ready
     function connectTwoNodes(){
         var letter =  getCurrentLetter();
          cy.add({
-            group: "edges", data: { id: letter, weight: letter, source: selectedNodeIds[0], target: selectedNodeIds[1] } 
+            group: "edges", data: { id: letter, weight: letter, text: letter, source: selectedNodeIds[0], target: selectedNodeIds[1] } 
          });
     }
     
@@ -117,7 +152,7 @@ $(function(){ // on dom ready
             'background-color': '#B3767E',
             'width': 'mapData(baz, 0, 25, 25, 55)',
             'height': 'mapData(baz, 0, 25, 25, 55)',
-            'content': 'data(id)'
+            'content': 'data(text)'
           })
         .selector('edge')
           .css({
@@ -126,7 +161,7 @@ $(function(){ // on dom ready
             'width': 2,
             'target-arrow-shape': 'circle',
             'opacity': 0.8,
-            'content': 'data(weight)'
+            'content': 'data(text)'
           })
         .selector(':selected')
           .css({

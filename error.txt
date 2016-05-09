@@ -1,0 +1,23 @@
+ERROR: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:2:11: Syntax error: Operator expected
+Warning: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:13:
+	Singleton variables: [NewVariable]
+Warning: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:13:
+	Singleton variable in branch: NewVariable
+Warning: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:53:
+	Singleton variables: [Map1In,Map2In]
+Warning: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:55:
+	Singleton variables: [TempVs,TempMap1,TempMap2]
+Warning: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:67:
+	Clauses of mapAtomList/9 are not together in the source-file
+	  Earlier definition at c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:53
+	  Current predicate: mapAtomList/10
+	  Use :- discontiguous mapAtomList/9. to suppress this message
+Warning: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:88:
+	Singleton variables: [Result,N,OBuf]
+Warning: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:99:
+	Singleton variables: [VsBuf,Map1Buf,Map2Buf]
+Warning: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:139:
+	Singleton variables: [S]
+Warning: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:141:
+	Singleton variables: [Result]
+^C
