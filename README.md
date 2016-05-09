@@ -20,9 +20,8 @@ Go to the configured site e.g.:
 * To connect nodes - click on the one node, and then on the second.
 * Center -centers the view of the draw.
 * Clear all - clearing the draw.
-* Solve VMTL - Starts VMTL problem solving, sends data to prolog with usage of node.js, in bottom of site process panel is located.
-As result will be ready graph will cover with values. Simple graphs have small solving time, harder graphs can take hours or days...
-* _Node_ - this are holds currently selected node.
+* Solve VMTL - starts VMTL problem solving, sends data to prolog with use of node.js, in bottom of the site process panel is located. As result will be ready graph will cover with values. Simple graphs have small solving time, harder graphs can take hours or days...
+* \_Node\_ - here currently selected node is hold.
 * Remove - removes the selected node.
 * Unselect - unselects selected node.
 
