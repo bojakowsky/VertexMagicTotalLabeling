@@ -20,4 +20,99 @@ Warning: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:139:
 	Singleton variables: [S]
 Warning: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:141:
 	Singleton variables: [Result]
-^C
+Warning: c:/users/brzydal/desktop/vmtl/vertexmagictotallabeling/vmtl.pl:3: Initialization goal failed
+Welcome to SWI-Prolog (Multi-threaded, 64 bits, Version 7.2.3)
+Copyright (c) 1990-2015 University of Amsterdam, VU Amsterdam
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software,
+and you are welcome to redistribute it under certain conditions.
+Please visit http://www.swi-prolog.org for details.
+
+For help, use ?- help(Topic). or ?- apropos(Word).
+
+ERROR: Undefined procedure: (:-)/1
+ERROR:   Directives must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Syntax error: Operator expected
+ERROR: :- Dynamic
+ERROR: ** here **
+ERROR:  edge/3 . 
+ERROR: Undefined procedure: (:-)/1
+ERROR:   Directives must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: assert/1: Arguments are not sufficiently instantiated
+   Exception: (7) buildAssertsFromFile([_G899, _G902], _G899) ? ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+ERROR: Undefined procedure: (:-)/2
+ERROR:   Rules must be loaded from a file
+ERROR:   See FAQ at http://www.swi-prolog.org/FAQ/ToplevelMode.txt
+% halt
