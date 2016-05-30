@@ -22,8 +22,8 @@ html, body {
 
 .buttonMargin {
     margin: 2px !important;
-    min-width: 150px !important;
-	max-width: 150px !important;
+    min-width: 100px !important;
+	max-width: 250px !important;
 }
 
 }

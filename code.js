@@ -63,9 +63,47 @@ function getEdgesAndNodesAsFacts(){
     
     return asserts + vertices;
 }
+var allResults;
+var resultIndex = 0;
+function showNextResult(index){
+	var splitData = allResults[index].split(" ").filter(function(el) {return el.length != 0});
+						
+	splitData[0] = splitData[0].replace("[", "");
+	splitData[0] = splitData[0].replace("]", "");
+	
+	splitData[1] = splitData[1].replace("[", "");
+	splitData[1] = splitData[1].replace("]", "");
+	
+	splitData[2] = splitData[2].replace("[", "");
+	splitData[2] = splitData[2].replace("]", "");
+	
+	splitIds = splitData[0].split(",");
+	splitVal = splitData[1].split(",");
+	
+	for (var i = 0 ; i < splitIds.length; ++i){
+		cy.$("#" + splitIds[i]).attr("text", 
+			splitIds[i] + " = " + splitVal[i]);
+	}
+	$("#resultText").text("(" + (index+1) + "/" + allResults.length + ") " + 
+		"True, it's vertex-magic total graph. Sum for each vertex is: " + splitData[2]);
+	if (allResults.length > 1)
+		$("#showNextResult").css("visibility", "visible");
+}
+
+function nextResult(){
+	resultIndex = resultIndex + 1;
+	if (resultIndex == allResults.length) resultIndex = 0
+	showNextResult(resultIndex);
+}
+
+function resetAndHide(){
+	resultIndex = 0;
+	$("#showNextResult").css("visibility", "hidden");
+}
 
 function solve(){
-	$("#process").text("Please wait, it can take a while... To break solving click the button again.");
+	resetAndHide();
+	$("#resultText").text("Please wait, it can take a while... To break solving click the button again.");
 	
     dataToSend = getEdgesAndNodesAsFacts();
     //path = document.getElementById("swiplPath").value;
@@ -84,27 +122,22 @@ function solve(){
 		socket.on('reply', function(data){
 			var data = data.data;
 			if (data != 'False.'){
-				var splitData = data.split(" ").filter(function(el) {return el.length != 0});
-				
-				splitData[0] = splitData[0].replace("[", "");
-				splitData[0] = splitData[0].replace("]", "");
-				
-				splitData[1] = splitData[1].replace("[", "");
-				splitData[1] = splitData[1].replace("]", "");
-				
-				splitData[2] = splitData[2].replace("[", "");
-				splitData[2] = splitData[2].replace("]", "");
-				
-				splitIds = splitData[0].split(",");
-				splitVal = splitData[1].split(",");
-				
-				for (var i = 0 ; i < splitIds.length; ++i){
-					cy.$("#" + splitIds[i]).attr("text", splitIds[i] + " = " + splitVal[i]);
-				}
-				$("#process").text("True, it's vertex-magic total graph. Sum for each vertex is: " + splitData[2]);
+				allResults = data.split("!").filter(function(el) {return el.length != 0});
+				if (allResults.length > 0)
+					showNextResult(resultIndex);
+
+				// for (var i = 0 ; i < allResults.length; i++)
+				// {
+					// (function(index){
+					// setTimeout(function(){
+						
+					// }, 2000*i);
+					// })(i);
+				// }
 			}
 			else {
-				$("#process").text("False, it's not vertex-magic total graph");
+				$("#resultText").text("False, it's not vertex-magic total graph");
+				resetAndHide();
 			}
 
 		});
@@ -119,6 +152,33 @@ function solve(){
         downloadLink.click();*/
     //}
     //else $('#errorModal').modal('show');
+}
+
+function solveSingle(){
+	resetAndHide();
+	$("#resultText").text("Please wait, it can take a while... To break solving click the button again.");
+	
+    dataToSend = getEdgesAndNodesAsFacts();
+	var dataToSendAsJSON = JSON.parse('{"data": "(' + dataToSend + ') > asserts.txt" }');
+	var socket = io.connect('http://localhost:81'); // connec to server
+	socket.on('news', function (data) { // listen to news event raised by the server
+	  console.log(dataToSendAsJSON);
+	  socket.emit('executeFast', dataToSendAsJSON ); // raise an event on the server
+	});
+	
+	socket.on('reply', function(data){
+		var data = data.data;
+		if (data != 'False.'){
+			allResults = data.split("!").filter(function(el) {return el.length != 0});
+				if (allResults.length > 0)
+					showNextResult(resultIndex);
+		}
+		else {
+			$("#resultText").text("False, it's not vertex-magic total graph");
+			resetAndHide();
+		}
+
+	});
 }
 
 function destroyClickedElement(event)

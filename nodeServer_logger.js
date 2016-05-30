@@ -60,60 +60,68 @@ http.createServer(function (req, res) {
 }).listen(8000); //, '127.0.0.1'
 console.log('Server running at localhost:8000/');
 
+
 var io = require('socket.io').listen(81); // initiate socket.io server
 
 io.sockets.on('connection', function (socket) {
   socket.emit('news', { hello: 'world' }); // Send data to client
 
+  function vmtl(error, stdout, stderr) {
+		if (error === null){
+			console.log('stdout: ', 'VMTL successfully solved!');
+			//console.log('stderr: ', stderr);
+			
+			var countLines = 0;
+			var dataReply = "";
+			var msgSent = false;
+			lineReader.eachLine('result.txt', function(line, last) {
+			  if (dataReply == "" && countLines == 0 && line == 'true.'){
+				  socket.emit('reply', JSON.parse('{"data": "False." }'));
+				  msgSent = true;
+				  countLines++;
+			  }
+			  else if (!msgSent) {		
+				  if (line == 'true.'){
+					console.log("DataReply: "  + dataReply);
+					var replyJSON = JSON.parse('{"data": "'+ dataReply +'"}');
+					console.log("DataReplyJSON: " +replyJSON);
+					socket.emit('reply', replyJSON);
+					msgSent = true;
+				  }		  
+				  else if (countLines < 2){
+					  dataReply += " " + line;
+					  countLines++;
+					  console.log("loop dataReply: " + dataReply);
+				  }
+				  
+				  else if (countLines == 2){
+					  dataReply += " [" + line + "]!";
+					  countLines = 0;
+					  console.log("break loop: " + dataReply );
+				  }
+			  }
+			});		
+		}
+		else if (error !== null) {
+			console.log('exec error: ', 'Proces was running, killing it!');
+			exec("taskkill /f /im swipl.exe");
+		}
+	}
+  
   // wait for the event raised by the client
   socket.on('execute', function (data) {  
     console.log(data+ "\n");
 	console.log(data.data + "\n");
 	exec(data.data);
 	// exec("( echo test & echo.test) > asserts.txt");
-
-	exec('"D:\\Program Files\\swipl\\bin\\swipl" -f \"vmtl.pl\" < \"vmtl.pl\" > result.txt  2> error.txt', function(error, stdout, stderr) {
-    if (error === null){
-		console.log('stdout: ', 'VMTL successfully solved!');
-		//console.log('stderr: ', stderr);
-		
-		var countLines = 0;
-		var dataReply = "";
-		var msgSent = false;
-		lineReader.eachLine('result.txt', function(line, last) {
-		  if (countLines == 0 && line == 'true.'){
-			  socket.emit('reply', JSON.parse('{"data": "False." }'));
-			  msgSent = true;
-			  countLines++;
-		  }
-		  else if (!msgSent) {			  
-			  if (countLines < 2){
-				  dataReply += " " + line;
-				  countLines++;
-				  console.log("loop dataReply: " + dataReply);
-			  }
-			  
-			  else if (countLines == 2){
-				  dataReply += " [" + line + "]";
-				  countLines++;
-				  console.log("break loop: " + dataReply );
-			  }
-			  
-			  else if (last){
-				console.log("DataReply: "  + dataReply);
-				var replyJSON = JSON.parse('{"data": "'+ dataReply +'"}');
-				console.log("DataReplyJSON: " +replyJSON);
-				socket.emit('reply', replyJSON);
-			  }
-		  }
-		});
-		
-		
-	}
-    else if (error !== null) {
-        console.log('exec error: ', 'Proces was running, killing it!');
-		exec("taskkill /f /im swipl.exe");
-    }
-	});
+	exec('"C:\\Program Files\\swipl\\bin\\swipl" -f \"vmtlAll.pl\" < \"vmtlAll.pl\" > result.txt  2> error.txt', vmtl);
+  });
+  
+  socket.on('executeFast', function (data) {  
+    console.log(data+ "\n");
+	console.log(data.data + "\n");
+	exec(data.data);
+	// exec("( echo test & echo.test) > asserts.txt");
+	exec('"C:\\Program Files\\swipl\\bin\\swipl" -f \"vmtlFirst.pl\" < \"vmtlFirst.pl\" > result.txt  2> error.txt', vmtl);
   });
 });

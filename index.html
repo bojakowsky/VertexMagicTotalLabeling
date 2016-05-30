@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title> VMTL </title>
 <link href="style.css" rel="stylesheet" />
 <meta charset=utf-8 />
 <meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui">
@@ -10,24 +11,30 @@
 <script src="code.js"></script>
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="http://cdn.socket.io/socket.io-1.4.5.js"></script>
 </head>
 <body>
 <div id="buttonPanel" class="container" >
     <!--<div class="col-xs-4 buttonMargin">
           <input class="form-control" id="swiplPath" type="text" placeholder="Full path of SWI Prolog bin directory">
     </div> -->
-    <button id="center" class="btn btn-success btn-lg buttonMargin" onclick="centerGraph()">Center</button>
-    <button id="clear" class="btn btn-danger btn-lg buttonMargin" onclick="clearAll()">Clear all</button>
-    <button id="solve" class="btn btn-primary btn-lg buttonMargin" onclick="solve()">Solve VMTL</button>
-    <button id="unselect" class="btn btn-default btn-lg pull-right buttonMargin" onclick="unselectNode()">Unselect </button>
-    <button id="remove" class="btn btn-default btn-lg pull-right buttonMargin" onclick="removeNodess()">Remove</button>
-    <button id="node" class="btn btn-info btn-lg pull-right buttonMargin " >_Node_</button>
+    <button id="center" class="btn btn-default btn-lg buttonMargin" onclick="centerGraph()" style="color: white; background-color: #5CB85C;">Center</button>
+    <button id="clear" class="btn btn-default btn-lg buttonMargin" onclick="clearAll()" style="color: white; background-color: #D9534F;">Clear all</button>
+    <button id="unselect" class="btn btn-default btn-lg pull-right buttonMargin" onclick="unselectNode()" style="background-color: white;">Unselect </button>
+    <button id="solve" class="btn btn-default btn-lg buttonMargin" onclick="solve()" style="color: white; background-color: #286090; top: 150px;">Solve VMTL - all results</button>
+	<button id="solve" class="btn btn-default btn-lg buttonMargin" onclick="solveSingle()" style="color: white; background-color: #286090; top: 150px;">Solve VMTL - first result</button>
+    <button id="remove" class="btn btn-default btn-lg pull-right buttonMargin" onclick="removeNodess()" style="background-color: white;">Remove</button>
+    <button id="node" class="btn btn-default btn-lg pull-right buttonMargin " style="color: white; background-color: #C8BFE7;">_Node_</button>
     
 	<div class="footer navbar-fixed-bottom">
 		<div class="panel panel-success">
 		  <div class="panel-heading">Process</div>
-		  <div id="process" class="panel-body">Empty.</div>
+		  <div id="process" class="panel-body">
+			<div id="resultText"> Waiting. </div>
+			<div id="nextResultButton">
+				<button id="showNextResult" style="float: center; visibility: hidden" class="btn btn-default" onclick="nextResult()"> Next </button>
+			</div>
+		  </div>
 		</div>
 	</div>
 </div>        
