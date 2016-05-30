@@ -33,3 +33,13 @@ Go to the configured site e.g.:
 
 ###Don't worry, it's working. Any changes are logged on node.js, so in case of doubts look at console logs.
 ![alt tag](https://github.com/bojakowsky/VertexMagicTotalLabeling/blob/master/images/Solving.png)
+
+###Update
+* Added possibility to view all results - finding all results takes more time.
+* Seperated nodeServer.js into nodeServer_clean.js and nodeServer_logger.js - when finding all results logging every action in the console is really time consuming.
+* Seperated vmtl into VMTLall and VMTLsingle - one handles printing all results, the other not.
+
+### View all results
+![alt tag](https://github.com/bojakowsky/VertexMagicTotalLabeling/blob/master/images/SolvedAll.png)
+### View first result
+![alt tag](https://github.com/bojakowsky/VertexMagicTotalLabeling/blob/master/images/SolvedSingle.png)
