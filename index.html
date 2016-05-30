@@ -14,17 +14,19 @@
 <script src="http://cdn.socket.io/socket.io-1.4.5.js"></script>
 </head>
 <body>
-<div id="buttonPanel" class="container" >
+<div id="buttonPanel" class="container" style="width: 100%;"  >
     <!--<div class="col-xs-4 buttonMargin">
           <input class="form-control" id="swiplPath" type="text" placeholder="Full path of SWI Prolog bin directory">
     </div> -->
-    <button id="center" class="btn btn-default btn-lg buttonMargin" onclick="centerGraph()" style="color: white; background-color: #5CB85C;">Center</button>
-    <button id="clear" class="btn btn-default btn-lg buttonMargin" onclick="clearAll()" style="color: white; background-color: #D9534F;">Clear all</button>
-    <button id="unselect" class="btn btn-default btn-lg pull-right buttonMargin" onclick="unselectNode()" style="background-color: white;">Unselect </button>
-    <button id="solve" class="btn btn-default btn-lg buttonMargin" onclick="solve()" style="color: white; background-color: #286090; top: 150px;">Solve VMTL - all results</button>
-	<button id="solve" class="btn btn-default btn-lg buttonMargin" onclick="solveSingle()" style="color: white; background-color: #286090; top: 150px;">Solve VMTL - first result</button>
-    <button id="remove" class="btn btn-default btn-lg pull-right buttonMargin" onclick="removeNodess()" style="background-color: white;">Remove</button>
-    <button id="node" class="btn btn-default btn-lg pull-right buttonMargin " style="color: white; background-color: #C8BFE7;">_Node_</button>
+	
+    <button id="center" class="btn btn-default btn-lg pull-center buttonMargin" onclick="centerGraph()" style="color: white; background-color: #5CB85C;">Center</button>
+    <button id="clear" class="btn btn-default btn-lg pull-center buttonMargin" onclick="clearAll()" style="color: white; background-color: #D9534F;">Clear all</button>
+    
+    <button id="solve" class="btn btn-default btn-lg pull-center buttonMargin" onclick="solve()" style="color: white; background-color: #286090; top: 150px;">Solve VMTL - all results</button>
+	<button id="solve" class="btn btn-default btn-lg pull-center buttonMargin" onclick="solveSingle()" style="color: white; background-color: #286090; top: 150px;">Solve VMTL - first result</button>
+	<button id="unselect" class="btn btn-default btn-lg pull-center buttonMargin" onclick="unselectNode()" style="background-color: white;">Unselect </button>
+    <button id="remove" class="btn btn-default btn-lg pull-center buttonMargin" onclick="removeNodess()" style="background-color: white;">Remove</button>
+    <button id="node" class="btn btn-default btn-lg pull-center buttonMargin " style="color: white; background-color: #C8BFE7;">_Node_</button>
     
 	<div class="footer navbar-fixed-bottom">
 		<div class="panel panel-success">
